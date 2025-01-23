@@ -1,0 +1,168 @@
+---
+title: "Aula 2 - pt2"
+author: 
+  - name: "Willian"
+    orcid: "0000-0002-3064-4486"
+    email: "willian.miranda.as@gmail.com"
+    degrees:
+      - "PhD"
+    affiliations:
+      - name: "Universidade de São Paulo"
+        city: "São Paulo"
+        state: "SP"
+  - name: "Vitor vacilao"
+    degrees:
+      - "PhD"
+    affiliations:
+      - name: "Universidade de São Paulo"
+        city: "São Paulo"
+        state: "SP"
+format: html
+date: today
+lang: en
+toc: true  
+toccolor: "green"
+toc-location: body
+---
+
+```{r}
+#| warning: false
+#| message: false
+library(tidyverse)
+library(dados)
+library(ggplot2)
+```
+
+```{r}
+combinar_palavras <- function(vetor){
+  knitr::combine_words(vetor, and = " e ", oxford_comma = FALSE)
+}
+```
+
+## Gráficos
+
+```{r}
+#| warning: false
+pinguins |>  
+  ggplot() +
+  aes(x = comprimento_nadadeira, y = massa_corporal)+
+  geom_point(aes(color = especie))
+
+```
+
+O pacote `esquisse::esquisser()` (ou vai em Addins e clica na opção "ggplot2 builder") é muito útil para gerar gráficos de maneira iterativa (de arrasta e solta) e nisso obtém-se inclusive o código necessário para gerar o gráfico.
+
+#esquisse::esquisser()
+
+```{r}
+#
+```
+
+## Código
+
+Testando como que pega o código gerado com o esquisse
+
+```{r}
+ggplot(dados::pinguins) +   aes(x = massa_corporal, y = comprimento_bico) +   geom_point(size = 1.6, colour = "#EF562D") +   labs(     x = "variável X",     y = "VAr Y",     title = "teste ESQUISSE"   ) +   theme_gray()
+
+```
+
+## Resultados de códigos no texto (\*inline code\*)
+
+```{r}
+#| echo: false #esconde o código 
+especies_de_pinguins <- unique(pinguins$especie)
+media_massa_arredondada <- round(mean(pinguins$massa_corporal, na.rm = TRUE)/1000, 2)
+```
+
+*Exemplo 1*
+
+A base que utilizamos tem `r nrow(pinguins)` pinguins, de `r length(especies_de_pinguins)` espécies diferentes: `r especies_de_pinguins`
+
+### Função `combine_words()`
+
+Essa função é usada para combinar elementos de um vetor em uma única string, com conjunções como "e" ou "ou".
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+library(knitr)
+
+combine_words(c("apples", "bananas", "oranges"), oxford_comma = TRUE)
+
+\# Saída: "apples, bananas, and oranges"
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+*Exemplo 2 ( bem importante com o uso do combine_words()*
+
+A base que utilizamos tem `r nrow(pinguins)` pinguins, de `r length(especies_de_pinguins)` espécies diferentes: `r combinar_palavras(especies_de_pinguins)`
+
+Os pinguins foram amostrados nas seguintes ilhas: `r combinar_palavras(unique(pinguins$ilha))`
+
+Os dados foram coletados entre `r min(pinguins$ano)` e `r max(pinguins$ano)`
+
+A média do peso corporal é de `r media_massa_arredondada` kg.
+
+`r Sys.Date()`
+
+## Tabelas
+
+### com markdown
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+|      |      |      |
+|      |      |      |
+
+: legendaa
+
+### com código
+
+```{r}
+pinguins_tab <- dados::pinguins |> count(especie, ilha)
+pinguins_tab
+```
+
+https://glin.github.io/reactable/ \--\> importante para essa parte de tabelas (ver examples)
+
+Algumas coisas iterativas só funcionam com html
+
+```{r}
+knitr::kable(pinguins_tab, col.names = c("Especie", "ilha", "nº de pinguins"))
+```
+
+### Reactable() para tabela interativas (html)
+
+```{r}
+reactable::reactable(pinguins, searchable = TRUE)
+```
+
+mais recomendado para geração de tabela para o Word
+
+```{r}
+flextable::flextable(pinguins_tab)
+```
+
+```{r}
+# https://gt.rstudio.com/
+```
+
+## Nota de rodapé
+
+Quero escrever uma nota de rodapé[^1].
+
+[^1]: Essa é uma nota de rodapé.
+
+-   para autoria: email, afiliação
+-   gráficos
+-   tabelas
+-   quadro
+-   código
+-   imagens
+-   tabelas sintezes de regressão com o pacote stargazer
+-   sumário
+-   resultados de códigos no texto
+-   referências
+-   equações e expressões matemáticas com latex
+-   notas de rodapé
+-   fluxograma - mermaid
